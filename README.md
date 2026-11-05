@@ -1,34 +1,37 @@
-# lemon – Place 2D (Windows)
+# Lemon
 
-`lemon.Place` administra la ventana y el ciclo de vida de los frames. El
-renderizado vive en `lemon.graphics.Renderer`; `Sprite`, `Graphics` y `Text`
-describen el contenido visual. El backend Windows usa Direct2D/DirectWrite.
+Lemon is a Haxe framework for building 2D applications and games. It provides
+scene lifecycle helpers, graphics, input, audio, tweens, and platform services.
 
-## Requisitos
+The current desktop backend targets Windows with Win32, Direct2D, and
+DirectWrite. The Android prototype uses Haxe's Java target, OpenGL ES, touch
+input, and Android's `MediaPlayer`.
+
+## Requirements
 
 - Haxe
-- Haxelib hxcpp y Windows con un compilador C++ compatible (Visual Studio o MinGW) para el backend Windows
-- Haxelib hxjava para generar fuentes Java del port Android
+- `hxcpp` and a compatible C++ toolchain (Visual Studio or MinGW) for Windows
+- `hxjava`, Java, Android SDK, and Gradle for Android
+- `g++` to build the Lemon command-line tool
 
-Instala hxcpp si aún no está instalado:
+Install `hxcpp` if it is not already available:
 
 ```powershell
 haxelib install hxcpp
 ```
 
-## CLI de compilacion
+## Lemon command-line tool
 
-El CLI nativo C++ vive en `compiler/`. Desde una copia de desarrollo, registra
-la carpeta una vez en Haxelib y ejecuta el setup:
+From a development checkout, register Lemon with Haxelib and build the CLI:
 
 ```powershell
 haxelib dev lemon .
 haxelib run lemon setup
 ```
 
-`setup` instala `hxcpp` y `hxjava` si hacen falta y compila
-`compiler/main.cpp` como `compiler/lemon.exe` usando `g++`. Despues puedes
-invocar el CLI mediante Haxelib o directamente:
+`setup` installs `hxcpp` and `hxjava` if needed and builds `compiler/main.cpp`
+as `compiler/lemon.exe` using `g++`. You can then use the CLI directly or
+through Haxelib:
 
 ```powershell
 haxelib run lemon -m windows.x64
@@ -37,74 +40,82 @@ lemon -m android.arm.x64
 .\compiler\lemon.exe -m windows.x64
 ```
 
-`lemon create android.arm.x64` crea en la carpeta actual un proyecto Android
-completo, autocontenido y listo para compilar; tambien acepta un directorio de
-destino opcional. No sobrescribe archivos existentes. Despues ejecuta
-`lemon -m android.arm.x64` desde el proyecto creado para generar la APK debug.
-El proyecto incluye el framework Haxe, la demo y sus assets. El CLI compila el
-proyecto de la carpeta actual si encuentra `build.hxml` (Windows) o
-`gradlew.bat` con `settings.gradle` (Android); si no, compila la demo incluida.
-Para Windows usa Haxe/hxcpp. Android requiere Java, Android SDK y las
-dependencias Gradle de Android. El nombre `android.arm.x64` es el selector
-historico del target; la APK actual usa Java y no contiene bibliotecas nativas
-especificas por ABI. `setup` requiere `g++` disponible en `PATH`; tambien se
-requiere registrar la copia de desarrollo con Haxelib una vez (o instalar
-Lemon desde Haxelib).
+### Creating an Android project
 
-## Compilación de la demo
+`lemon create android.arm.x64` creates a self-contained Android project in the
+current directory. You may provide a destination directory:
 
-Desde la carpeta `demo`:
+```powershell
+lemon create android.arm.x64 MyGame
+cd MyGame
+lemon -m android.arm.x64
+```
+
+The generated project includes the Haxe framework sources, demo, and assets.
+Creation does not overwrite existing files. Run `lemon -m android.arm.x64`
+from the generated project to build a debug APK.
+
+The CLI builds the project in the current directory when it finds `build.hxml`
+for Windows or `gradlew.bat` and `settings.gradle` for Android. Otherwise, it
+builds the corresponding demo included with Lemon.
+
+The Android target name `android.arm.x64` is a historical selector. The
+current Android application is Java-based and does not include native
+libraries for a specific ABI.
+
+## Building the Windows demo
+
+From the `demo` directory:
 
 ```powershell
 haxe build.hxml
 ```
 
-Esto usa el backend hxcpp incluido en Haxe y genera la aplicación en `demo/build`.
-La metadata `@:buildXml` del puente nativo de renderizado añade la ruta de
-`include/` al compilador C++, así que no hace falta configurar una ruta absoluta.
+This uses Haxe's hxcpp backend and generates the application in `demo/build`.
+The native rendering bridge's `@:buildXml` metadata adds the `include/` path
+for C++ compilation, so no absolute include path is required.
 
 ## Application
 
-`lemon.Application` agrupa la ventana principal y los servicios asociados de
-la aplicacion. En Windows, proporciona notificaciones del sistema, avisos del
-area de notificacion y progreso en el boton de la barra de tareas:
+`lemon.Application` groups the main window with application services. On
+Windows, it supports system notifications, tray notifications, and taskbar
+progress:
 
 ```haxe
 import lemon.Application;
 
-var app = new Application("Mi aplicación", 800, 600);
+var app = new Application("My application", 800, 600);
 if (app.create()) {
     app.show();
     app.progressBar.setProgress(3, 10);
-    app.notifications.show("Listo", "La tarea terminó.");
-    app.tray.show("Lemon", "La aplicación sigue ejecutándose.");
+    app.notifications.show("Ready", "The task is complete.");
+    app.tray.show("Lemon", "The application is still running.");
     while (app.update()) {
-        // Actualizar la lógica de la aplicación.
+        // Update application logic.
     }
 }
 app.dispose();
 ```
 
-La ventana se obtiene mediante `app.window`; `create()`, `show()`, `hide()`,
-`update()`, `close()` y `dispose()` coordinan el ciclo de vida. `run()` crea y
-muestra la ventana si hace falta y bombea el bucle principal, opcionalmente
-llamando un callback por iteracion. `app.progressBar` permite
-`setProgress(value, maximum)`, `setIndeterminate()`, `setPaused()`,
-`setError()` y `clear()`. `app.tray.hide()` quita el icono del area de
-notificacion. Los errores de los servicios se exponen mediante su propiedad
-`error`.
+Use `app.window` to access the window. `create()`, `show()`, `hide()`,
+`update()`, `close()`, and `dispose()` manage its lifecycle. `run()` creates
+and shows the window if necessary, then runs the main loop, optionally calling
+a callback on each iteration.
 
-En el backend Windows, las notificaciones y avisos de bandeja se presentan
-como notificaciones nativas del area de notificacion (icono temporal y globo
-del sistema); el progreso usa `ITaskbarList3`. Estas APIs dependen de una
-ventana creada y no sustituyen aun los backends de notificaciones/toasts de
-Android, iOS o macOS.
+`app.progressBar` provides `setProgress(value, maximum)`,
+`setIndeterminate()`, `setPaused()`, `setError()`, and `clear()`.
+`app.tray.hide()` removes the tray icon. Service errors are exposed through
+their `error` property.
 
-## Sprites y Graphics
+On Windows, notifications and tray alerts use native notification-area
+balloons, and taskbar progress uses `ITaskbarList3`. These APIs require a
+created window and do not yet provide Android, iOS, or macOS notification
+backends.
 
-`Place` no contiene la API de formas: comienza/termina frames y delega la
-presentacion a `Renderer`. Los comandos se agregan en `sprite.graphics` y quedan
-retenidos hasta `clear()`:
+## Sprites and graphics
+
+`Place` manages the window and frame lifecycle; drawing commands belong to
+`sprite.graphics` and remain queued until `clear()` is called:
 
 ```haxe
 import lemon.graphics.Sprite;
@@ -112,29 +123,31 @@ import lemon.graphics.Sprite;
 var sprite = new Sprite();
 sprite.x = 40;
 sprite.y = 80;
-sprite.graphics.load("assets/hero.png"); // Tambien acepta haxe.io.Bytes
+sprite.graphics.load("assets/hero.png"); // Also accepts haxe.io.Bytes.
 sprite.graphics.fillCircle(24, 24, 12, 255, 180, 40);
 
 while (place.update() && place.isOpen()) {
-  if (place.beginFrame(20, 24, 36)) {
-    place.render(sprite);
-    place.endFrame();
-  }
+    if (place.beginFrame(20, 24, 36)) {
+        place.render(sprite);
+        place.endFrame();
+    }
 }
 ```
 
-`Sprite` permite mover, escalar, rotar y cambiar opacidad. `Graphics.load` admite
-una ruta o una copia de `haxe.io.Bytes`; los formatos de imagen los decodifica
-Windows Imaging Component. `Graphics` ofrece lineas, rectangulos, circulos y
-triangulos. El texto es un objeto independiente y sus propiedades de fuente y
-presentacion se configuran antes de `place.renderText(text)`:
+`Sprite` can be positioned, scaled, rotated, and made transparent.
+`Graphics.load` accepts a file path or a copy of `haxe.io.Bytes`. Windows
+decodes images through Windows Imaging Component. `Graphics` supports lines,
+rectangles, circles, and triangles.
+
+Text is represented by a separate `Text` object. Configure its font and
+presentation properties before calling `place.renderText(text)`:
 
 ```haxe
 import lemon.graphics.Text;
 import lemon.graphics.FontWeight;
 import lemon.graphics.FontStyle;
 
-var label = new Text("Hola Lemon");
+var label = new Text("Hello Lemon");
 label.x = 40;
 label.y = 280;
 label.fontFamily = "Segoe UI";
@@ -145,20 +158,20 @@ label.color = 0xFFE0A0;
 place.renderText(label);
 ```
 
-`Text` tambien admite una ruta opcional de archivo de fuente (`fontPath`),
-`fontStretch`, alineacion horizontal/vertical, dimensiones, posicion,
-transformacion, opacidad y visibilidad. Sin `fontPath`, usa la familia del
-sistema indicada por `fontFamily` (Segoe UI por defecto). `Place.render` y
-`Place.renderText` devuelven `false` cuando no pueden procesar el objeto.
+`Text` also supports an optional font file path (`fontPath`), font stretch,
+horizontal and vertical alignment, dimensions, transforms, opacity, and
+visibility. Without `fontPath`, it uses the system font family specified by
+`fontFamily` (Segoe UI by default). `Place.render` and `Place.renderText`
+return `false` when an object cannot be rendered.
 
-`demo/Main.hx` demuestra sprites con imagen cargada desde ruta y desde bytes,
-comandos de `Graphics` y un objeto `Text`. Llama `dispose()` al terminar.
+`demo/Main.hx` demonstrates sprites loaded from a path and from bytes, graphics
+commands, and a `Text` object. Call `dispose()` when finished.
 
 ## Tweens
 
-`Place` mantiene `place.tweens` y actualiza sus animaciones automáticamente
-desde `update()`. Los destinos aceptan propiedades numéricas, como las de
-`Sprite` y `Text`:
+`Place` exposes `place.tweens` and advances its tweens automatically during
+`update()`. Tween destinations can target numeric properties on objects such
+as `Sprite` and `Text`:
 
 ```haxe
 import lemon.tween.Ease;
@@ -166,18 +179,18 @@ import lemon.tween.Ease;
 place.tweens.to(sprite, { x: 400, alpha: 0.25 }, 1.2, Ease.quadInOut)
     .setDelay(0.2)
     .repeat(1, true)
-    .onComplete(function() trace("Tween terminado"));
+    .onComplete(function() trace("Tween complete"));
 ```
 
-Los tweens se expresan en segundos; `repeat(-1, true)` los repite
-indefinidamente con ida y vuelta. El manejador ofrece `pause()`, `resume()` y
-`clear()`. Hay easing `linear`, `quadIn`, `quadOut`, `quadInOut`, `cubicIn`,
-`cubicOut` y `cubicInOut`.
+Tween durations are measured in seconds. `repeat(-1, true)` repeats forever
+with a yoyo effect. A tween handle provides `pause()`, `resume()`, and
+`clear()`. Available easing functions include `linear`, `quadIn`, `quadOut`,
+`quadInOut`, `cubicIn`, `cubicOut`, and `cubicInOut`.
 
-## Video y audio OpenAL (Windows)
+## Video and OpenAL audio on Windows
 
-La clase `lemon.audio.Sound` carga un archivo y expone controles de
-reproduccion, volumen, pitch, repeticion y posicion 3D:
+`lemon.audio.Sound` loads an audio file and provides playback, volume, pitch,
+looping, and 3D positioning controls:
 
 ```haxe
 import lemon.audio.Sound;
@@ -190,82 +203,87 @@ if (!sound.play())
 // sound.pause(); sound.stop(); sound.dispose();
 ```
 
-La demo acepta `LEMON_SOUND` para cargar un sonido; el boton B del gamepad lo
-reproduce. Cada instancia administra su contexto OpenAL y debe liberarse con
-`dispose()`.
+The demo accepts `LEMON_SOUND` as the path to a sound file; pressing gamepad
+button B plays it. Each sound instance manages its own OpenAL context and
+should be released with `dispose()`.
 
-`sprite.graphics.video` reproduce video MP4/MOV mediante Media Foundation y
-presenta sus frames en el sprite. La decodificacion depende de los codecs
-instalados en Windows. El audio del archivo se intenta reproducir con OpenAL;
-si el audio no esta disponible, `audioStatus` expone el motivo y el video
-visual puede continuar:
+`sprite.graphics.video` plays MP4/MOV video through Media Foundation and
+displays its frames in the sprite. Playback depends on the codecs installed
+on Windows. The video file's audio is played through OpenAL when possible. If
+audio playback is unavailable, `audioStatus` describes the issue while video
+may continue:
 
 ```haxe
 sprite.graphics.video.load("assets/clip.mp4");
 sprite.graphics.video.setLooping(true);
 sprite.graphics.video.play();
-// Tambien: pause(), stop(), seek(seconds), currentTime, duration
+// Also available: pause(), stop(), seek(seconds), currentTime, duration.
 ```
 
-La demo acepta la variable de entorno `LEMON_VIDEO` con la ruta a un archivo
-compatible. Para audio se necesita `OpenAL32.dll` (por ejemplo, OpenAL Soft)
-disponible junto a la aplicacion o en la ruta de carga de Windows. OpenAL
-decodifica audio a PCM mediante Media Foundation; la disponibilidad de WAV,
-OGG u otros formatos depende de los codecs del sistema. `OpenALSource.queue`
-permite administrar buffers en cola, pero la decodificacion de archivos
-actualmente carga el audio completo en memoria y no implementa un lector
-incremental integrado.
+The demo accepts `LEMON_VIDEO` as the path to a compatible file.
+`OpenAL32.dll` (for example, OpenAL Soft) must be available beside the
+application or on the Windows loader path. OpenAL audio is decoded to PCM
+through Media Foundation; WAV, OGG, and other format support depends on
+system codecs. `OpenALSource.queue` can manage queued buffers, but file
+decoding currently loads the complete audio file into memory and does not
+include an incremental streaming reader.
 
-## Android (Activity Haxe y OpenGL ES)
+## Android: Haxe Activity and OpenGL ES
 
-El target Java aprobado para el port es el target oficial de Haxe (`--java`,
-respaldado por hxjava), no Reflaxe. El proyecto en `demo/android` integra las
-fuentes generadas por Haxe con una Activity Android y crea un APK de prueba.
-Desde esa carpeta se compila con:
+The Android prototype uses Haxe's official Java target (`--java`, backed by
+hxjava), not Reflaxe. The project in `demo/android` combines Haxe-generated
+Java sources with an Android app. Install hxjava if necessary:
 
-Instala el soporte Java con `haxelib install hxjava`.
+```powershell
+haxelib install hxjava
+```
+
+From `demo/android`, build a debug APK with:
 
 ```powershell
 .\gradlew.bat assembleDebug
 ```
 
-El APK de depuracion queda en
-`app/build/outputs/apk/debug/app-debug.apk`. La Activity Android que registra
-el manifest se genera desde `src/lemon/demo/MainActivity.hx`; no hace falta
-editar una Activity Java. `lemon.Activity` funciona como una escena/state de
-Flixel con callbacks `create`, `update(elapsed)`, `draw(graphics)`, `pause`,
-`resume` y `destroy`. `GLGraphics` ofrece primitivas 2D sobre OpenGL ES 2.0:
-`clear`, rectangulos, circulos, ovalos, triangulos y lineas. La demo de
-`ShapesActivity.hx` dibuja solo formas usando ese renderer.
-`lemon.platform.android.AndroidSound` reproduce audio incluido en `assets`
-con el `MediaPlayer` de Android. La demo reproduce `demo/assets/re.laced.up.ogg`
-al iniciar y pausa/reanuda el sonido al cambiar el estado de la aplicacion.
-Para otros sonidos, carga un asset con `new AndroidSound(context)`,
-`load("archivo.ogg")` y `play()`.
-`Activity.touch` expone `activeTouches`, `getTouch(id)` y los eventos
-`touch.down`, `touch.move`, `touch.up` y `touch.cancel`. El backend Android
-actualiza el input multitactil desde el ciclo GL; los puntos usan coordenadas
-de la superficie de render. La demo dibuja un punto blanco bajo cada dedo.
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`. The
+launcher Activity is generated from `src/lemon/demo/MainActivity.hx`; no
+hand-written Java Activity is required.
 
-El host usa `GLSurfaceView` y entrega el ciclo de render a OpenGL ES en el hilo
-de GL. Requiere Android SDK (API 35), JDK 17 o superior compatible con Gradle,
-Haxe con hxjava instalado y un dispositivo con OpenGL ES 2.0.
+`lemon.Activity` provides `create`, `update(elapsed)`, `draw(graphics)`,
+`pause`, `resume`, and `destroy` lifecycle callbacks. `GLGraphics` implements
+2D primitives on OpenGL ES 2.0. The sample `ShapesActivity.hx` draws shapes
+and displays a white point under each active finger.
 
-Este es el primer backend Android de escenas y formas, no el port entero de
-`lemon.graphics.Renderer`: sprites/texturas, `Text`, input gamepad, audio
-OpenAL, video y servicios Android siguen pendientes. Android ya admite touch
-mediante `Activity.touch` y audio mediante `AndroidSound`; Windows conserva su
-backend OpenAL.
+`lemon.platform.android.AndroidSound` plays audio packaged in the app's
+assets using Android's `MediaPlayer`. The demo starts
+`demo/assets/re.laced.up.ogg` when it opens and pauses/resumes playback with
+the application lifecycle. To load another bundled file:
 
-`Activity.draw` usa `lemon.graphics.GraphicsContext`, una interfaz de dibujo
-compartida que no depende de Android. `GLGraphics` es la implementacion actual
-para Android; el backend Metal de iOS/macOS todavia no esta implementado.
+```haxe
+var sound = new AndroidSound(context);
+sound.load("audio/music.ogg");
+sound.play();
+```
+
+`Activity.touch` exposes `activeTouches`, `getTouch(id)`, and the
+`touch.down`, `touch.move`, `touch.up`, and `touch.cancel` events. Android
+updates multitouch input on the GL frame loop. Touch coordinates are relative
+to the rendering surface. Android desktop mouse and gamepad backends are not
+implemented yet.
+
+The host uses `GLSurfaceView` and runs rendering on the OpenGL ES thread. It
+requires Android SDK API 35, a Java version supported by Gradle, Haxe with
+hxjava, and a device supporting OpenGL ES 2.0.
+
+This is an initial Android scene and shape-rendering backend, not a complete
+port of `lemon.graphics.Renderer`. Sprites and textures, `Text`, gamepad input,
+OpenAL, video, and Android system services are still pending. Android uses
+`AndroidSound` for audio; Windows retains its OpenAL backend.
 
 ### Using an Activity
 
 Extend `lemon.Activity` and override the lifecycle methods you need. `update`
-receives elapsed time in seconds, and `draw` receives a platform-independent
-`GraphicsContext` whose coordinates are measured in surface pixels:
+receives elapsed time in seconds, and `draw` receives the platform-independent
+`GraphicsContext` interface. Coordinates are measured in surface pixels:
 
 ```haxe
 import lemon.Activity;
@@ -275,7 +293,7 @@ class GameActivity extends Activity
 {
     override public function update(elapsed:Float):Void
     {
-        // Update your game state. `elapsed` is the time since the previous frame.
+        // Update game state. `elapsed` is the time since the previous frame.
     }
 
     override public function draw(graphics:GraphicsContext):Void
@@ -287,8 +305,8 @@ class GameActivity extends Activity
 }
 ```
 
-For touch input, subscribe to `touch.events`. Event payloads are available as
-`event.data` and contain the corresponding `TouchPoint`:
+For touch input, subscribe to `touch.events`. Event data contains the
+corresponding `TouchPoint`:
 
 ```haxe
 touch.events.on("touch.down", function(event) {
@@ -301,10 +319,10 @@ Override `pause`, `resume`, and `destroy` to suspend and release resources
 owned by your activity. Always dispose native resources when they are no
 longer needed.
 
-## Input y eventos (Windows)
+## Input and events on Windows
 
-`Place.update()` bombea los mensajes de Windows, actualiza el estado de input y
-despacha los eventos. Las APIs y tipos estan separados por paquete:
+`Place.update()` pumps Windows messages, updates input state, and dispatches
+events. Input classes are organized by package:
 
 ```haxe
 import lemon.input.keyboard.KeyCode;
@@ -320,61 +338,61 @@ place.input.mouse.events.on("mouse.move", function(event) {
 
 while (place.update() && place.isOpen()) {
     if (place.input.keyboard.isDown(KeyCode.Space)) {
-        // El espacio esta presionado.
+        // Space is currently held.
     }
     if (place.input.gamepads[0].isButtonDown(GamepadButton.A)) {
-        // El boton A del primer mando esta presionado.
+        // Button A on the first gamepad is currently held.
     }
 }
 ```
 
-Los eventos tambien se reciben en `place.input.events`. Los dispositivos
-exponen dispatchers propios (`keyboard.events`, `mouse.events` y
-`gamepads[index].events`). Los tipos publicados son `keyboard.keyDown`,
+Events are also delivered through `place.input.events`. Each device has its
+own dispatcher (`keyboard.events`, `mouse.events`, and
+`gamepads[index].events`). Event types include `keyboard.keyDown`,
 `keyboard.keyUp`, `mouse.move`, `mouse.buttonDown`, `mouse.buttonUp`,
 `mouse.wheel`, `gamepad.connected`, `gamepad.disconnected`,
-`gamepad.buttonDown`, `gamepad.buttonUp` y `gamepad.axis`; el payload va en
-`event.data`. Las coordenadas del mouse son relativas al cliente de la ventana,
-y la rueda usa las unidades estandarizadas de Windows (120 por notch).
-Gamepads usa XInput y admite hasta cuatro mandos. El backend actual solo
-implementa teclado, mouse y XInput en Windows; los paquetes publicos se separan
-del adaptador nativo para permitir otros backends.
+`gamepad.buttonDown`, `gamepad.buttonUp`, and `gamepad.axis`. Event payloads
+are available through `event.data`.
 
-En Android, el mouse de escritorio aun no tiene backend; la superficie
-`Activity.touch` admite entrada tactil multitouch.
+Mouse coordinates are relative to the window's client area. The wheel uses
+standard Windows units (120 per notch). Gamepads use XInput and support up to
+four controllers. The current desktop input backend implements keyboard,
+mouse, and XInput on Windows. Android currently supports multitouch through
+`Activity.touch`, but does not yet have desktop mouse or gamepad backends.
 
-## Estado y límites
+## Platform status and limitations
 
-- Implementación actual: Windows, Win32 + Direct2D/DirectWrite.
-- `Place.hx` administra la ventana y delega el renderizado a `lemon.graphics.Renderer`.
-- El puente nativo hxcpp incorpora la cabecera C++ mediante `@:include`.
-- El constructor acepta un `String` normal de Haxe.
-- Android usa Haxe `--java`/hxjava para `Activity`, OpenGL ES, touch y audio
-  basico; no es todavia el backend completo de `Place`.
-- `Activity.draw` ahora depende de `GraphicsContext`, lo que permite agregar
-  renderers de otras plataformas sin acoplar la escena a GLES.
-- iOS/macOS aun no tienen host, renderer ni proyecto Xcode generable. Para
-  compilar, firmar y probar esos targets hace falta macOS con Xcode; el codigo
-  comun y el generador pueden prepararse desde Windows, pero no verificarse
-  aqui como aplicaciones Apple.
-- Linux/OpenGL queda para una etapa posterior.
+- **Windows:** Win32 window management, Direct2D/DirectWrite rendering,
+  keyboard and mouse input, XInput gamepads, OpenAL audio, and Media Foundation
+  video.
+- **Android:** Haxe `--java` Activity host, OpenGL ES 2.0 shape rendering,
+  multitouch, and basic audio through `MediaPlayer`. This is not yet a full
+  `Place` or `Renderer` backend.
+- **iOS and macOS:** No host, renderer, or Xcode project generator is
+  implemented yet. Building, signing, and testing Apple apps requires macOS
+  with Xcode. Shared Haxe code and project generation can be prepared on
+  Windows, but Apple applications cannot be built or verified here.
+- **Linux:** OpenGL backend is planned.
 
-## Arquitectura modular planeada
+`Activity.draw` depends on the platform-independent
+`lemon.graphics.GraphicsContext` interface. Android currently implements it
+with `GLGraphics`; other platform renderers have not been implemented.
 
-Cada subsistema vivira en su propio directorio y paquete Haxe; no se acumularan
-clases de input, red, dialogos o servicios del sistema dentro de `lemon` ni de
-`lemon.graphics`. La estructura prevista es:
+## Planned modular architecture
+
+Subsystems live in their own Haxe packages rather than being added to
+`lemon` or `lemon.graphics`:
 
 ```text
 src/lemon/
-  graphics/                 # Sprite, Graphics, Text y Renderer
+  graphics/                 # Sprite, Graphics, Text, Renderer, GraphicsContext
   input/
     Input.hx                # lemon.input
     keyboard/               # lemon.input.keyboard
     mouse/                  # lemon.input.mouse
     gamepad/                # lemon.input.gamepad
-    touch/                  # lemon.input.touch (Android implementado, iOS pendiente)
-  events/                   # lemon.events: eventos y suscripciones
+    touch/                  # lemon.input.touch (Android implemented; iOS planned)
+  events/                   # lemon.events
   dialogs/
     error/                  # lemon.dialogs.error
   notifications/            # lemon.notifications
@@ -388,20 +406,8 @@ src/lemon/
   net/                      # lemon.net
 ```
 
-El orden de implementacion previsto para las siguientes etapas sera:
-
-1. **Dialogos de error:** API portable en `lemon.dialogs.error`, con un backend
-   nativo separado por plataforma.
-2. **Servicios del sistema:** ampliar `Application` con backends de
-   notificaciones y progreso de taskbar para Android, iOS, macOS y Linux. El
-   backend Windows actual usa `ITaskbarList3` y Win32 sin exponer tipos COM en
-   la API Haxe.
-3. **Red:** API comun en `lemon.net`; transporte y detalles especificos de
-   plataforma quedaran en backends separados.
-4. **Touch movil:** completar y ampliar `lemon.input.touch` con un backend para
-   iOS; Android ya reporta los eventos tactiles desde `lemon.Activity`.
-
-Los dialogos de error, red y soporte touch de iOS siguen siendo roadmap. Las APIs
-comunes no dependeran de Win32, Android o UIKit; cada plataforma implementara
-su propio backend en el paquete correspondiente. Se mantienen independientes
-el ciclo de vida de `Place`, el renderizador y los servicios de sistema.
+Planned work includes portable error dialogs, platform-specific system
+notifications and taskbar progress, networking, and iOS touch support. The
+Windows taskbar backend uses `ITaskbarList3` without exposing COM types in the
+Haxe API. Shared APIs should remain independent of Win32, Android, and UIKit,
+with platform-specific implementations kept in their respective packages.
