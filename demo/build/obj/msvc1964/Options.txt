@@ -1,0 +1,3 @@
+hxcpp_api_level=430
+hxcpp_smart_strings=1
+hxcpp=c:/Users/krist/AppData/Roaming/Code/User/globalStorage/mikolka9144.funkin-compiler/userHaxelibs/fnf086-full/hxcpp/git/

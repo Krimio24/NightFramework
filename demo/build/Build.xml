@@ -1,0 +1,330 @@
+<xml>
+<set name="HXCPP_API_LEVEL" value="430" />
+<files id="haxe">
+<compilerflag value="-Iinclude"/>
+  <file name="src/sys/thread/_Thread/Thread_Impl_.cpp" >
+   <depend name="include/sys/thread/EventLoop.h"/>
+   <depend name="include/sys/thread/_Thread/HaxeThread.h"/>
+   <depend name="include/sys/thread/_Thread/Thread_Impl_.h"/>
+  </file>
+  <file name="src/sys/thread/Lock.cpp" >
+   <depend name="include/sys/thread/Lock.h"/>
+  </file>
+  <file name="src/sys/thread/_EventLoop/RegularEvent.cpp" >
+   <depend name="include/sys/thread/_EventLoop/RegularEvent.h"/>
+  </file>
+  <file name="src/sys/io/File.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/sys/io/File.h"/>
+  </file>
+  <file name="src/lemon/tween/TweenManager.cpp" >
+   <depend name="include/lemon/tween/Tween.h"/>
+   <depend name="include/lemon/tween/TweenManager.h"/>
+  </file>
+  <file name="src/lemon/tween/Tween.cpp" >
+   <depend name="include/Reflect.h"/>
+   <depend name="include/Std.h"/>
+   <depend name="include/lemon/tween/Ease.h"/>
+   <depend name="include/lemon/tween/Tween.h"/>
+  </file>
+  <file name="src/lemon/tween/Ease.cpp" >
+   <depend name="include/lemon/tween/Ease.h"/>
+  </file>
+  <file name="src/lemon/platform/windows/input/WindowsInputBackend.cpp" >
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+   <depend name="include/lemon/platform/windows/input/WindowsInputBackend.h"/>
+  </file>
+  <file name="src/lemon/platform/windows/WindowsApplicationBackend.cpp" >
+   <depend name="include/lemon/Place.h"/>
+   <depend name="include/lemon/platform/windows/WindowsApplicationBackend.h"/>
+  </file>
+  <file name="src/lemon/notifications/TrayNotification.cpp" >
+   <depend name="include/lemon/notifications/TrayNotification.h"/>
+   <depend name="include/lemon/platform/windows/WindowsApplicationBackend.h"/>
+  </file>
+  <file name="src/lemon/notifications/NotificationCenter.cpp" >
+   <depend name="include/lemon/notifications/NotificationCenter.h"/>
+   <depend name="include/lemon/platform/windows/WindowsApplicationBackend.h"/>
+  </file>
+  <file name="src/lemon/input/mouse/Mouse.cpp" >
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+   <depend name="include/lemon/input/mouse/Mouse.h"/>
+  </file>
+  <file name="src/lemon/input/keyboard/Keyboard.cpp" >
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+   <depend name="include/lemon/input/keyboard/Keyboard.h"/>
+  </file>
+  <file name="src/lemon/input/internal/InputBackend.cpp" >
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+  </file>
+  <file name="src/lemon/input/gamepad/Gamepad.cpp" >
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+   <depend name="include/lemon/input/gamepad/Gamepad.h"/>
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+  </file>
+  <file name="src/lemon/input/Input.cpp" >
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+   <depend name="include/lemon/input/Input.h"/>
+   <depend name="include/lemon/input/gamepad/Gamepad.h"/>
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+   <depend name="include/lemon/input/keyboard/Keyboard.h"/>
+   <depend name="include/lemon/input/mouse/Mouse.h"/>
+  </file>
+  <file name="src/lemon/graphics/Video.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALSource.h"/>
+   <depend name="include/lemon/graphics/Renderer.h"/>
+   <depend name="include/lemon/graphics/Video.h"/>
+  </file>
+  <file name="src/lemon/graphics/Text.cpp" >
+   <depend name="include/lemon/graphics/Renderer.h"/>
+   <depend name="include/lemon/graphics/Text.h"/>
+  </file>
+  <file name="src/lemon/graphics/Sprite.cpp" >
+   <depend name="include/lemon/graphics/Graphics.h"/>
+   <depend name="include/lemon/graphics/Sprite.h"/>
+  </file>
+  <file name="src/lemon/graphics/Renderer.cpp" >
+   <depend name="include/Std.h"/>
+   <depend name="include/lemon/graphics/Graphics.h"/>
+   <depend name="include/lemon/graphics/Renderer.h"/>
+   <depend name="include/lemon/graphics/Sprite.h"/>
+   <depend name="include/lemon/graphics/Text.h"/>
+  </file>
+  <file name="src/lemon/graphics/Graphics.cpp" >
+   <depend name="include/Std.h"/>
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/lemon/graphics/Graphics.h"/>
+   <depend name="include/lemon/graphics/Renderer.h"/>
+   <depend name="include/lemon/graphics/Video.h"/>
+   <depend name="include/lemon/graphics/_Graphics/GraphicsCommand.h"/>
+  </file>
+  <file name="src/lemon/graphics/_Graphics/GraphicsCommand.cpp" >
+   <depend name="include/lemon/graphics/_Graphics/GraphicsCommand.h"/>
+  </file>
+  <file name="src/lemon/events/EventDispatcher.cpp" >
+   <depend name="include/haxe/IMap.h"/>
+   <depend name="include/haxe/ds/StringMap.h"/>
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+  </file>
+  <file name="src/lemon/events/Event.cpp" >
+   <depend name="include/lemon/events/Event.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALSource.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffectSlot.h"/>
+   <depend name="include/lemon/audio/openal/OpenALFilter.h"/>
+   <depend name="include/lemon/audio/openal/OpenALSource.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALListener.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALListener.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALFilter.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALFilter.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALEffectSlot.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffect.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffectSlot.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALEffect.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffect.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALContext.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffect.h"/>
+   <depend name="include/lemon/audio/openal/OpenALEffectSlot.h"/>
+   <depend name="include/lemon/audio/openal/OpenALFilter.h"/>
+   <depend name="include/lemon/audio/openal/OpenALListener.h"/>
+   <depend name="include/lemon/audio/openal/OpenALSource.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALConstants.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALConstants.h"/>
+  </file>
+  <file name="src/lemon/audio/openal/OpenALBuffer.cpp" >
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+  </file>
+  <file name="src/lemon/audio/Sound.cpp" >
+   <depend name="include/lemon/audio/Sound.h"/>
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALSource.h"/>
+  </file>
+  <file name="src/lemon/TaskbarProgressBar.cpp" >
+   <depend name="include/lemon/TaskbarProgressBar.h"/>
+   <depend name="include/lemon/platform/windows/WindowsApplicationBackend.h"/>
+  </file>
+  <file name="src/lemon/Place.cpp" >
+   <depend name="include/lemon/Place.h"/>
+   <depend name="include/lemon/graphics/Renderer.h"/>
+   <depend name="include/lemon/graphics/Sprite.h"/>
+   <depend name="include/lemon/graphics/Text.h"/>
+   <depend name="include/lemon/input/Input.h"/>
+   <depend name="include/lemon/input/internal/InputBackend.h"/>
+   <depend name="include/lemon/platform/windows/input/WindowsInputBackend.h"/>
+   <depend name="include/lemon/tween/TweenManager.h"/>
+  </file>
+  <file name="src/lemon/Application.cpp" >
+   <depend name="include/Sys.h"/>
+   <depend name="include/lemon/Application.h"/>
+   <depend name="include/lemon/Place.h"/>
+   <depend name="include/lemon/TaskbarProgressBar.h"/>
+   <depend name="include/lemon/notifications/NotificationCenter.h"/>
+   <depend name="include/lemon/notifications/TrayNotification.h"/>
+   <depend name="include/lemon/platform/windows/WindowsApplicationBackend.h"/>
+  </file>
+  <file name="src/haxe/iterators/ArrayIterator.cpp" >
+   <depend name="include/haxe/iterators/ArrayIterator.h"/>
+  </file>
+  <file name="src/haxe/io/Error.cpp" >
+   <depend name="include/haxe/io/Error.h"/>
+  </file>
+  <file name="src/haxe/io/Bytes.cpp" >
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/haxe/io/Error.h"/>
+  </file>
+  <file name="src/haxe/ds/StringMap.cpp" >
+   <depend name="include/haxe/IMap.h"/>
+   <depend name="include/haxe/ds/StringMap.h"/>
+  </file>
+  <file name="src/haxe/MainLoop.cpp" >
+   <depend name="include/haxe/MainEvent.h"/>
+   <depend name="include/haxe/MainLoop.h"/>
+  </file>
+  <file name="src/haxe/MainEvent.cpp" >
+   <depend name="include/haxe/MainEvent.h"/>
+  </file>
+  <file name="src/haxe/Log.cpp" >
+   <depend name="include/Std.h"/>
+   <depend name="include/haxe/Log.h"/>
+  </file>
+  <file name="src/haxe/EntryPoint.cpp" >
+   <depend name="include/haxe/EntryPoint.h"/>
+  </file>
+  <file name="src/sys/thread/_Thread/HaxeThread.cpp" >
+   <depend name="include/sys/thread/EventLoop.h"/>
+   <depend name="include/sys/thread/Mutex.h"/>
+   <depend name="include/sys/thread/_Thread/HaxeThread.h"/>
+  </file>
+  <file name="src/sys/thread/EventLoop.cpp" >
+   <depend name="include/Sys.h"/>
+   <depend name="include/haxe/MainLoop.h"/>
+   <depend name="include/sys/thread/EventLoop.h"/>
+   <depend name="include/sys/thread/Lock.h"/>
+   <depend name="include/sys/thread/Mutex.h"/>
+   <depend name="include/sys/thread/_EventLoop/RegularEvent.h"/>
+  </file>
+  <file name="src/sys/thread/Mutex.cpp" >
+   <depend name="include/sys/thread/Mutex.h"/>
+  </file>
+  <file name="src/haxe/IMap.cpp" >
+   <depend name="include/haxe/IMap.h"/>
+  </file>
+  <file name="src/Sys.cpp" >
+   <depend name="include/Sys.h"/>
+  </file>
+  <file name="src/StringTools.cpp" >
+   <depend name="include/StringTools.h"/>
+  </file>
+  <file name="src/Std.cpp" >
+   <depend name="include/Std.h"/>
+  </file>
+  <file name="src/Reflect.cpp" >
+   <depend name="include/Reflect.h"/>
+  </file>
+  <file name="src/Main.cpp" >
+   <depend name="include/Main.h"/>
+   <depend name="include/Std.h"/>
+   <depend name="include/StringTools.h"/>
+   <depend name="include/Sys.h"/>
+   <depend name="include/haxe/Log.h"/>
+   <depend name="include/haxe/io/Bytes.h"/>
+   <depend name="include/lemon/Application.h"/>
+   <depend name="include/lemon/Place.h"/>
+   <depend name="include/lemon/TaskbarProgressBar.h"/>
+   <depend name="include/lemon/audio/Sound.h"/>
+   <depend name="include/lemon/audio/openal/OpenALBuffer.h"/>
+   <depend name="include/lemon/audio/openal/OpenALContext.h"/>
+   <depend name="include/lemon/audio/openal/OpenALSource.h"/>
+   <depend name="include/lemon/events/Event.h"/>
+   <depend name="include/lemon/events/EventDispatcher.h"/>
+   <depend name="include/lemon/graphics/Graphics.h"/>
+   <depend name="include/lemon/graphics/Sprite.h"/>
+   <depend name="include/lemon/graphics/Text.h"/>
+   <depend name="include/lemon/graphics/Video.h"/>
+   <depend name="include/lemon/input/Input.h"/>
+   <depend name="include/lemon/input/gamepad/Gamepad.h"/>
+   <depend name="include/lemon/notifications/TrayNotification.h"/>
+   <depend name="include/lemon/tween/Ease.h"/>
+   <depend name="include/lemon/tween/Tween.h"/>
+   <depend name="include/lemon/tween/TweenManager.h"/>
+   <depend name="include/sys/io/File.h"/>
+  </file>
+  <file name="src/__boot__.cpp" >
+   <depend name="include/lemon/graphics/_Graphics/GraphicsCommand.h"/>
+   <depend name="include/haxe/io/Error.h"/>
+   <depend name="include/lemon/audio/openal/OpenALConstants.h"/>
+   <depend name="include/haxe/Log.h"/>
+   <depend name="include/sys/thread/_Thread/HaxeThread.h"/>
+  </file>
+  <file name="src/__files__.cpp" if='HXCPP_DEBUGGER'>
+  </file>
+   <file name="${HXCPP}/src/hx/NoFiles.cpp" unless="HXCPP_DEBUGGER" />
+  <file name="src/__resources__.cpp" >
+  </file>
+</files>
+<files id="__lib__">
+<compilerflag value="-Iinclude"/>
+  <file name="src/__lib__.cpp" >
+   <depend name="include/Main.h"/>
+   <depend name="include/sys/thread/_Thread/Thread_Impl_.h"/>
+  </file>
+</files>
+<files id="__main__">
+<compilerflag value="-Iinclude"/>
+  <file name="src/__main__.cpp" >
+   <depend name="include/Main.h"/>
+   <depend name="include/sys/thread/_Thread/Thread_Impl_.h"/>
+  </file>
+</files>
+<files id="__resources__">
+</files>
+<files id="__externs__">
+</files>
+<set name="HAXE_OUTPUT" value="Main" />
+<include name="${HXCPP}/build-tool/BuildCommon.xml"/>
+<include name="${HXCPP}/src/hx/libs/std/Build.xml"/>
+<include name="${HXCPP}/src/hx/libs/std/Build.xml"/>
+
+<files id='haxe'>
+    <compilerflag value='-I${this_dir}/../../include'/>
+</files>
+
+
+<files id='haxe'>
+    <compilerflag value='-I${this_dir}/../../../include'/>
+</files>
+
+
+<files id='haxe'>
+    <compilerflag value='-I${this_dir}/../../include'/>
+</files>
+
+<error value="Hxcpp is out of date - please update" unlessApi="430" />
+</xml>

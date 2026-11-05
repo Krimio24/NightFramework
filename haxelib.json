@@ -1,0 +1,25 @@
+
+{
+  "name": "lemon",
+  "url": "https://github.com/Krimio24/lemon",
+  "license": "MIT",
+  "tags": [
+    "game",
+    "framework",
+    "graphics",
+    "audio",
+    "native"
+  ],
+  "description": "A lightweight game framework built with Haxe and native platform APIs.",
+  "version": "0.1.0",
+  "classPath": "src",
+  "releasenote": "Initial development release.",
+  "contributors": [
+    "LemonsFramework",
+    "Krimio24"
+  ],
+  "dependencies": {
+    "hxcpp": "",
+    "hxjava": ""
+  }
+}
