@@ -1,4 +1,4 @@
-# Lemon
+# Night Framework
 
 Lemon is a Haxe framework for building 2D applications and games. It provides
 scene lifecycle helpers, graphics, input, audio, tweens, and platform services.
