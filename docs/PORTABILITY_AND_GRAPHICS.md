@@ -1,6 +1,6 @@
 # Portability and graphics expansion
 
-This document records the implementation boundary for the next Lemon development
+This document records the implementation boundary for the next Night development
 milestone. A platform is not considered supported merely because its target name
 is accepted by the command-line tool: it needs a native host, renderer, input and
 lifecycle integration, build packaging, and a CI/device validation path.
@@ -40,20 +40,20 @@ so Wayland and X11 can be selected independently.
 
 ## Module and binary artifact model
 
-Lemon separates the framework runtime from the application/game module:
+Night separates the framework runtime from the application/game module:
 
-- The Lemon framework library is distributed as `.ndll` or `.dll`.
-- An application or game module may be emitted as `.ndll`, `.hdll`, or
-  `.dll`, selected by the target and requested module kind.
+- The Night runtime library is named `night.ndll` or `night.dll`.
+- A game module is named `game.ndll` / `game.dll`, or `game.hdll` for a Haxe module.
+- An application module is named `app.ndll` / `app.dll`, or `app.hdll` for a Haxe module.
 - `.ndll` is the native dynamic-module form. It contains native machine code
-  and exports the versioned Lemon module entry points.
+  and exports the versioned Night module entry points.
 - `.dll` is the Windows PE native-library form and remains a supported
   compatibility output. It is not a portable executable format on its own.
 - `.hdll` is reserved for a Haxe module form. It must carry a declared Haxe
-  runtime/ABI version and must be loaded by a compatible Lemon/Haxe runtime;
+  runtime/ABI version and must be loaded by a compatible Night/Haxe runtime;
   it must not be treated as a native DLL by the operating-system loader.
 
-The extension is a logical artifact contract, not permission to ignore the
+The output basename is selected by project kind (`game` or `app`). The runtime uses the `night` basename. The extension is a logical artifact contract, not permission to ignore the
 operating system's binary format. The build manifest must record target OS,
 CPU architecture, binary format, ABI version, module kind, and dependencies.
 A native module must match the host process architecture and ABI.
@@ -69,13 +69,12 @@ loading of downloaded native modules.
 
 The public module ABI should be C-compatible, versioned, and independent of
 C++ name mangling. Each native module should expose a single stable descriptor
-or entry point that reports its ABI version and required Lemon runtime version.
+or entry point that reports its ABI version and required Night runtime version.
 The loader must reject incompatible architecture, ABI, or runtime versions
 before invoking module code. No C++ standard-library objects may cross the
 module boundary. Resource ownership and shutdown must be explicit.
 
-The exact export names, descriptor layout, `.hdll` bytecode/container format,
-and loader implementation are a follow-up implementation task. The extensions
+The versioned C ABI is specified in `docs/MODULE_ABI.md`. The `.hdll` bytecode/container format and loader implementation remain follow-up tasks. The extensions
 are specified here; the runtime does not yet load these module types.
 
 ## Compiler and project generation
@@ -105,7 +104,7 @@ compatibility alias until a migration release.
 
 ## Sparrow atlas support
 
-The `lemon.graphics.atlas` package contains a Sparrow XML metadata reader,
+The `night.graphics.atlas` package contains a Sparrow XML metadata reader,
 ordered prefix lookup, and a time-based animation controller. It reads
 `TextureAtlas` and `SubTexture` elements, including trimmed-frame offsets.
 `Animation.fromPrefix` builds an animation from a frame-name prefix.
