@@ -76,6 +76,21 @@ class TextureAtlas
         return frames.exists(name);
     }
 
+    public function getPrefix(prefix:String):Array<SparrowFrame>
+    {
+        if (prefix == null || prefix.length == 0)
+            return [];
+
+        var result:Array<SparrowFrame> = [];
+        for (name in frames.keys())
+        {
+            if (StringTools.startsWith(name, prefix))
+                result.push(frames.get(name));
+        }
+        result.sort(function(a, b) return Reflect.compare(a.name, b.name));
+        return result;
+    }
+
     public function count():Int
     {
         var total = 0;
