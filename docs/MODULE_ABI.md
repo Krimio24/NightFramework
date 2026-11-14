@@ -1,18 +1,18 @@
-# Lemon native module ABI
+# Night native module ABI
 
 ## Scope
 
-The native module ABI separates the Lemon runtime library from a game or
+The native module ABI separates the Night runtime library from a game or
 application module. This specification defines the first C-compatible ABI
 contract for native modules. It does not define the `.hdll` container.
 
 ## Artifact rules
 
-- Runtime library: `.ndll` on platforms using Lemon's native-module naming;
-  `.dll` is also supported as the Windows PE/COFF library name.
-- Native game/application module: `.ndll` or `.dll`, selected by target.
-- Haxe module: `.hdll`, reserved for a separately specified Haxe runtime
-  container. It is not a PE/ELF/Mach-O shared library.
+- Runtime library: `night.ndll` or `night.dll` (Windows PE/COFF).
+- Game module: `game.ndll` or `game.dll`.
+- Application module: `app.ndll` or `app.dll`.
+- Haxe game/application module: `game.hdll` or `app.hdll`, reserved for a
+  separately specified Haxe runtime container. It is not a native shared library.
 
 The payload must match the target's actual binary format and architecture:
 PE/COFF on Windows, ELF on Linux, and Mach-O on macOS. A suffix does not alter
@@ -20,8 +20,8 @@ the binary format.
 
 ## C ABI
 
-Native modules include `include/lemon/module.h` and export
-`lemon_module_query`. The function returns a descriptor only when the
+Native modules include `include/night/module.h` and export
+`night_module_query`. The function returns a descriptor only when the
 requested host ABI is compatible. The descriptor contains its own size,
 ABI version, minimum runtime version, module name, and lifecycle callbacks.
 
