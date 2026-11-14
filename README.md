@@ -101,8 +101,9 @@ iOS requires special handling. Native code must be packaged and signed with
 the application under Apple's platform rules. Lemon will not promise arbitrary
 loading of downloaded native modules on iOS.
 
-See [Portability and graphics expansion](docs/PORTABILITY_AND_GRAPHICS.md)
-for the planned module ABI, platform matrix, and validation requirements.
+See [Native module ABI](docs/MODULE_ABI.md) for the initial C ABI contract and
+[Portability and graphics expansion](docs/PORTABILITY_AND_GRAPHICS.md) for the
+platform matrix and validation requirements.
 
 ## Application
 
