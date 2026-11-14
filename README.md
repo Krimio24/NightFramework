@@ -75,6 +75,35 @@ This uses Haxe's hxcpp backend and generates the application in `demo/build`.
 The native rendering bridge's `@:buildXml` metadata adds the `include/` path
 for C++ compilation, so no absolute include path is required.
 
+## Runtime and application modules
+
+Lemon is designed as a runtime library separated from the application or game
+module. The planned artifact outputs are:
+
+| Artifact | Purpose | Binary contract |
+| --- | --- | --- |
+| `.ndll` | Lemon runtime library or native game module | Native platform binary with the Lemon C ABI |
+| `.dll` | Windows-compatible runtime library or game module | Windows PE/COFF dynamic library |
+| `.hdll` | Haxe application/game module | Haxe module container loaded by a matching Haxe/Lemon runtime |
+
+The output kind is selected by the target and build configuration. A native
+module must match the host operating system, CPU architecture, and versioned
+Lemon ABI. The build manifest will describe those requirements and the module's
+dependencies. The extension alone does not make a binary portable: Windows
+uses PE/COFF, Linux uses ELF, and macOS uses Mach-O.
+
+`.hdll` is not a native DLL and must not be passed to the operating-system
+dynamic-library loader. Its container format and runtime compatibility rules
+are still being designed. Likewise, the module loader and native ABI are
+roadmap items; the current build does not yet emit or load all three formats.
+
+iOS requires special handling. Native code must be packaged and signed with
+the application under Apple's platform rules. Lemon will not promise arbitrary
+loading of downloaded native modules on iOS.
+
+See [Portability and graphics expansion](docs/PORTABILITY_AND_GRAPHICS.md)
+for the planned module ABI, platform matrix, and validation requirements.
+
 ## Application
 
 `lemon.Application` groups the main window with application services. On
