@@ -67,10 +67,11 @@ class Renderer
         var texture = sprite.graphics.imageTexture();
         if (sprite.graphics.hasImage())
         {
+            var frame = sprite.currentFrame;
             if (sprite.width <= 0)
-                sprite.width = native.ptr.textureWidth(texture);
+                sprite.width = frame != null ? frame.frameWidth : native.ptr.textureWidth(texture);
             if (sprite.height <= 0)
-                sprite.height = native.ptr.textureHeight(texture);
+                sprite.height = frame != null ? frame.frameHeight : native.ptr.textureHeight(texture);
         }
         else if (sprite.graphics.hasVideo())
         {
