@@ -74,7 +74,7 @@ The loader must reject incompatible architecture, ABI, or runtime versions
 before invoking module code. No C++ standard-library objects may cross the
 module boundary. Resource ownership and shutdown must be explicit.
 
-The versioned C ABI is specified in `docs/MODULE_ABI.md`. The `.hdll` bytecode/container format and loader implementation remain follow-up tasks. The extensions
+These names define the intended output contract only. The current compiler does not yet emit `game.ndll`, `app.ndll`, `.dll`, or `.hdll`; native linking, project-kind selection, and the `.hdll` container/loader remain implementation tasks. The versioned C ABI is specified in `docs/MODULE_ABI.md`. The extensions
 are specified here; the runtime does not yet load these module types.
 
 ## Compiler and project generation
