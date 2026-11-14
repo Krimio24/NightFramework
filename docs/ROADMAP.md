@@ -1,4 +1,4 @@
-# Lemon roadmap
+# Night roadmap
 
 ## Graphics and assets
 - [x] Parse Sparrow XML TextureAtlas metadata.
@@ -14,7 +14,9 @@
 ## Module system
 - [x] Define the initial versioned C-compatible native module ABI header.
 - [ ] Implement native module loading, lifecycle management, and ABI validation.
-- [ ] Build Lemon runtime libraries as `.ndll` and Windows-compatible `.dll`.
+- [ ] Build the Night runtime as `night.ndll` / `night.dll`.
+- [ ] Emit game modules as `game.ndll` / `game.dll` / `game.hdll`.
+- [ ] Emit application modules as `app.ndll` / `app.dll` / `app.hdll`.
 - [ ] Build native app/game modules as `.ndll` or `.dll` according to target.
 - [ ] Define the `.hdll` Haxe module container, runtime versioning, and loader.
 - [ ] Add module manifest with OS, architecture, binary format, ABI, and dependencies.
