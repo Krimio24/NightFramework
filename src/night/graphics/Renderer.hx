@@ -67,10 +67,11 @@ class Renderer
         var texture = sprite.graphics.imageTexture();
         if (sprite.graphics.hasImage())
         {
+            var frame = sprite.currentFrame;
             if (sprite.width <= 0)
-                sprite.width = native.ptr.textureWidth(texture);
+                sprite.width = frame != null ? frame.frameWidth : native.ptr.textureWidth(texture);
             if (sprite.height <= 0)
-                sprite.height = native.ptr.textureHeight(texture);
+                sprite.height = frame != null ? frame.frameHeight : native.ptr.textureHeight(texture);
         }
         else if (sprite.graphics.hasVideo())
         {
@@ -83,7 +84,21 @@ class Renderer
         native.ptr.setTransform(sprite.scaleX, sprite.scaleY, sprite.rotation, sprite.x, sprite.y);
         var result = true;
         if (sprite.graphics.hasImage())
-            result = native.ptr.drawTexture(texture, 0, 0, sprite.width, sprite.height, sprite.alpha);
+        {
+            var frame = sprite.currentFrame;
+            if (frame != null)
+            {
+                if (sprite.width <= 0)
+                    sprite.width = frame.frameWidth;
+                if (sprite.height <= 0)
+                    sprite.height = frame.frameHeight;
+                result = native.ptr.drawTextureRegion(texture,
+                    frame.x, frame.y, frame.width, frame.height,
+                    frame.frameX, frame.frameY, frame.width, frame.height, sprite.alpha);
+            }
+            else
+                result = native.ptr.drawTexture(texture, 0, 0, sprite.width, sprite.height, sprite.alpha);
+        }
         if (sprite.graphics.hasVideo())
             result = native.ptr.drawTexture(sprite.graphics.videoTexture(), 0, 0, sprite.width, sprite.height, sprite.alpha) && result;
         sprite.graphics.drawCommands(this, sprite.alpha);

@@ -802,6 +802,37 @@ namespace native
             return true;
         }
 
+        bool drawTextureRegion(int id, double sourceX, double sourceY,
+            double sourceWidth, double sourceHeight, double x, double y,
+            double width, double height, double alpha)
+        {
+            const auto found = textures.find(id);
+            if (!readyToDraw() || found == textures.end() || found->second.bitmap == nullptr ||
+                sourceX < 0 || sourceY < 0 || sourceWidth <= 0 || sourceHeight <= 0)
+                return false;
+
+            const auto bitmapSize = found->second.bitmap->GetSize();
+            if (sourceX + sourceWidth > bitmapSize.width ||
+                sourceY + sourceHeight > bitmapSize.height)
+                return false;
+
+            renderTarget->DrawBitmap(
+                found->second.bitmap.Get(),
+                D2D1::RectF(
+                    static_cast<float>(x), static_cast<float>(y),
+                    static_cast<float>(x + width), static_cast<float>(y + height)
+                ),
+                std::max(0.0f, std::min(static_cast<float>(alpha), 1.0f)),
+                D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+                D2D1::RectF(
+                    static_cast<float>(sourceX), static_cast<float>(sourceY),
+                    static_cast<float>(sourceX + sourceWidth),
+                    static_cast<float>(sourceY + sourceHeight)
+                )
+            );
+            return true;
+        }
+
         void unloadTexture(int id)
         {
             textures.erase(id);

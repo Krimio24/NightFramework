@@ -179,14 +179,14 @@ namespace
     void printUsage()
     {
         std::cout
-            << "Lemon build tool\n"
+            << "Night build tool\n"
             << "Uso:\n"
-            << "  lemon create android.arm.x64 [directorio]\n"
-            << "  lemon -m windows.x64\n"
-            << "  lemon -m android.arm.x64\n"
-            << "  haxelib run lemon setup\n\n"
+            << "  night create android.arm.x64 [directorio]\n"
+            << "  night -m windows.x64\n"
+            << "  night -m android.arm.x64\n"
+            << "  haxelib run night setup\n\n"
             << "create genera un proyecto Android en el directorio indicado (o\n"
-            << "en el actual). Luego ejecuta lemon -m android.arm.x64 desde ahi.\n"
+            << "en el actual). Luego ejecuta night -m android.arm.x64 desde ahi.\n"
             << "Los comandos de compilacion usan la demo incluida si no encuentran\n"
             << "un proyecto compatible en el directorio actual.\n";
     }
@@ -322,7 +322,7 @@ namespace
             return false;
 
         std::cout << "Proyecto Android creado en " << destination.string() << "\n"
-                  << "Compilalo desde ahi con: lemon -m android.arm.x64\n";
+                  << "Compilalo desde ahi con: night -m android.arm.x64\n";
         return true;
     }
 }
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
     }
     if (std::string(argv[1]) == "setup")
     {
-        std::cerr << "Ejecuta la configuracion con: haxelib run lemon setup\n";
+        std::cerr << "Ejecuta la configuracion con: haxelib run night setup\n";
         return 2;
     }
     if (std::string(argv[1]) == "create")
@@ -377,7 +377,7 @@ int main(int argc, char** argv)
         }
         if (!fs::exists(projectDirectory / "build.hxml"))
         {
-            std::cerr << "No se encontro build.hxml en el proyecto ni en la demo de Lemon.\n";
+            std::cerr << "No se encontro build.hxml en el proyecto ni en la demo de Night.\n";
             return 2;
         }
         command = {"haxe", "build.hxml"};
@@ -398,7 +398,7 @@ int main(int argc, char** argv)
         const fs::path gradleWrapper = projectDirectory / "gradlew.bat";
         if (!fs::exists(gradleWrapper))
         {
-            std::cerr << "No se encontro gradlew.bat en el proyecto ni en la demo Android de Lemon.\n";
+            std::cerr << "No se encontro gradlew.bat en el proyecto ni en la demo Android de Night.\n";
             return 2;
         }
         command = {gradleWrapper.string(), "assembleDebug"};
@@ -419,7 +419,7 @@ int main(int argc, char** argv)
         return 2;
     }
 
-    std::cout << "Compilando Lemon para " << target << "...\n";
+    std::cout << "Compilando Night para " << target << "...\n";
     const int result = runProcess(command, projectDirectory);
     if (result != 0)
     {

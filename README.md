@@ -1,6 +1,6 @@
 # Night Framework
 
-Lemon is a Haxe framework for building 2D applications and games. It provides
+Night is a Haxe framework for building 2D applications and games. It provides
 scene lifecycle helpers, graphics, input, audio, tweens, and platform services.
 
 The current desktop backend targets Windows with Win32, Direct2D, and
@@ -12,7 +12,7 @@ input, and Android's `MediaPlayer`.
 - Haxe
 - `hxcpp` and a compatible C++ toolchain (Visual Studio or MinGW) for Windows
 - `hxjava`, Java, Android SDK, and Gradle for Android
-- `g++` to build the Lemon command-line tool
+- `g++` to build the Night command-line tool
 
 Install `hxcpp` if it is not already available:
 
@@ -20,44 +20,44 @@ Install `hxcpp` if it is not already available:
 haxelib install hxcpp
 ```
 
-## Lemon command-line tool
+## Night command-line tool
 
-From a development checkout, register Lemon with Haxelib and build the CLI:
+From a development checkout, register Night with Haxelib and build the CLI:
 
 ```powershell
 haxelib dev lemon .
-haxelib run lemon setup
+haxelib run night setup
 ```
 
 `setup` installs `hxcpp` and `hxjava` if needed and builds `compiler/main.cpp`
-as `compiler/lemon.exe` using `g++`. You can then use the CLI directly or
+as `compiler/night.exe` using `g++`. You can then use the CLI directly or
 through Haxelib:
 
 ```powershell
-haxelib run lemon -m windows.x64
-lemon create android.arm.x64
-lemon -m android.arm.x64
+haxelib run night -m windows.x64
+night create android.arm.x64
+night -m android.arm.x64
 .\compiler\lemon.exe -m windows.x64
 ```
 
 ### Creating an Android project
 
-`lemon create android.arm.x64` creates a self-contained Android project in the
+`night create android.arm.x64` creates a self-contained Android project in the
 current directory. You may provide a destination directory:
 
 ```powershell
-lemon create android.arm.x64 MyGame
+night create android.arm.x64 MyGame
 cd MyGame
-lemon -m android.arm.x64
+night -m android.arm.x64
 ```
 
 The generated project includes the Haxe framework sources, demo, and assets.
-Creation does not overwrite existing files. Run `lemon -m android.arm.x64`
+Creation does not overwrite existing files. Run `night -m android.arm.x64`
 from the generated project to build a debug APK.
 
 The CLI builds the project in the current directory when it finds `build.hxml`
 for Windows or `gradlew.bat` and `settings.gradle` for Android. Otherwise, it
-builds the corresponding demo included with Lemon.
+builds the corresponding demo included with Night.
 
 The Android target name `android.arm.x64` is a historical selector. The
 current Android application is Java-based and does not include native
@@ -75,6 +75,36 @@ This uses Haxe's hxcpp backend and generates the application in `demo/build`.
 The native rendering bridge's `@:buildXml` metadata adds the `include/` path
 for C++ compilation, so no absolute include path is required.
 
+## Runtime and application modules
+
+Night is designed as a runtime library separated from the application or game
+module. The planned artifact outputs are:
+
+| Artifact | Purpose | Binary contract |
+| --- | --- | --- |
+| `.ndll` | Night runtime library or native game module | Native platform binary with the Night C ABI |
+| `.dll` | Windows-compatible runtime library or game module | Windows PE/COFF dynamic library |
+| `.hdll` | Haxe application/game module | Haxe module container loaded by a matching Haxe/Night runtime |
+
+The output kind is selected by the target and build configuration. A native
+module must match the host operating system, CPU architecture, and versioned
+Night ABI. The build manifest will describe those requirements and the module's
+dependencies. The extension alone does not make a binary portable: Windows
+uses PE/COFF, Linux uses ELF, and macOS uses Mach-O.
+
+`.hdll` is not a native DLL and must not be passed to the operating-system
+dynamic-library loader. Its container format and runtime compatibility rules
+are still being designed. Likewise, the module loader and native ABI are
+roadmap items; the current build does not yet emit or load all three formats.
+
+iOS requires special handling. Native code must be packaged and signed with
+the application under Apple's platform rules. Night will not promise arbitrary
+loading of downloaded native modules on iOS.
+
+See [Native module ABI](docs/MODULE_ABI.md) for the initial C ABI contract and
+[Portability and graphics expansion](docs/PORTABILITY_AND_GRAPHICS.md) for the
+platform matrix and validation requirements.
+
 ## Application
 
 `lemon.Application` groups the main window with application services. On
@@ -89,7 +119,7 @@ if (app.create()) {
     app.show();
     app.progressBar.setProgress(3, 10);
     app.notifications.show("Ready", "The task is complete.");
-    app.tray.show("Lemon", "The application is still running.");
+    app.tray.show("Night", "The application is still running.");
     while (app.update()) {
         // Update application logic.
     }
@@ -147,7 +177,7 @@ import lemon.graphics.Text;
 import lemon.graphics.FontWeight;
 import lemon.graphics.FontStyle;
 
-var label = new Text("Hello Lemon");
+var label = new Text("Hello Night");
 label.x = 40;
 label.y = 280;
 label.fontFamily = "Segoe UI";
@@ -411,3 +441,40 @@ notifications and taskbar progress, networking, and iOS touch support. The
 Windows taskbar backend uses `ITaskbarList3` without exposing COM types in the
 Haxe API. Shared APIs should remain independent of Win32, Android, and UIKit,
 with platform-specific implementations kept in their respective packages.
+
+
+## New development branch: portability and Sparrow graphics
+
+The branch `feature/portable-platforms-sparrow-atlas` adds the first
+Sparrow atlas metadata and animation-clock APIs:
+
+- `lemon.graphics.atlas.TextureAtlas` parses Sparrow XML `TextureAtlas` /
+  `SubTexture` metadata, including trimmed-frame offsets.
+- `SparrowFrame` stores source rectangle and original frame dimensions.
+- `Animation` provides elapsed-time playback, looping, pause, stop, and
+  non-looping completion.
+
+Example:
+
+```haxe
+import lemon.graphics.atlas.TextureAtlas;
+import lemon.graphics.atlas.Animation;
+
+var atlas = TextureAtlas.load("assets/character.xml");
+var animation = Animation.fromPrefix(atlas, "idle", 24, true);
+var sprite = new lemon.graphics.Sprite();
+sprite.playAnimation(atlas, animation);
+sprite.update(elapsedSeconds);
+place.render(sprite);
+```
+
+The Windows Direct2D renderer now draws the selected source rectangle from the
+atlas, and Sprite can play an Animation directly. Call `sprite.update(elapsed)`
+once per frame before rendering. The Android prototype still exposes only its
+shape-oriented GraphicsContext and does not yet implement Sparrow texture
+rendering; other future renderers must implement the same source-rectangle
+operation before they can display atlas frames.
+
+See [the portability design](docs/PORTABILITY_AND_GRAPHICS.md) and
+[the roadmap](docs/ROADMAP.md) for Vulkan, iOS, Linux, macOS, and compiler
+work. Those platform backends are planned, not claimed as implemented.

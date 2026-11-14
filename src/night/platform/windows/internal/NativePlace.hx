@@ -40,6 +40,7 @@ extern class NativePlace
     function loadTexturePixels(bytes:BytesData, length:Int, width:Int, height:Int):Int;
     function updateTexturePixels(texture:Int, bytes:BytesData, length:Int, width:Int, height:Int):Bool;
     function drawTexture(texture:Int, x:Float, y:Float, width:Float, height:Float, alpha:Float):Bool;
+    function drawTextureRegion(texture:Int, sourceX:Float, sourceY:Float, sourceWidth:Float, sourceHeight:Float, x:Float, y:Float, width:Float, height:Float, alpha:Float):Bool;
     function unloadTexture(texture:Int):Void;
     function textureWidth(texture:Int):Float;
     function textureHeight(texture:Int):Float;
