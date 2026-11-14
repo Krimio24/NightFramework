@@ -431,16 +431,19 @@ import lemon.graphics.atlas.TextureAtlas;
 import lemon.graphics.atlas.Animation;
 
 var atlas = TextureAtlas.load("assets/character.xml");
-var idle = [atlas.get("idle0000"), atlas.get("idle0001")];
-var animation = new Animation("idle", idle, 24, true);
-animation.play();
-animation.update(elapsedSeconds);
-var frame = animation.currentFrame;
+var animation = Animation.fromPrefix(atlas, "idle", 24, true);
+var sprite = new lemon.graphics.Sprite();
+sprite.playAnimation(atlas, animation);
+sprite.update(elapsedSeconds);
+place.render(sprite);
 ```
 
-This is the metadata and timing foundation, not yet full atlas rendering:
-the current renderer still needs source-rectangle texture drawing and a
-backend-neutral texture API before these frames can be drawn by Sprite.
+The Windows Direct2D renderer now draws the selected source rectangle from the
+atlas, and Sprite can play an Animation directly. Call `sprite.update(elapsed)`
+once per frame before rendering. The Android prototype still exposes only its
+shape-oriented GraphicsContext and does not yet implement Sparrow texture
+rendering; other future renderers must implement the same source-rectangle
+operation before they can display atlas frames.
 
 See [the portability design](docs/PORTABILITY_AND_GRAPHICS.md) and
 [the roadmap](docs/ROADMAP.md) for Vulkan, iOS, Linux, macOS, and compiler
