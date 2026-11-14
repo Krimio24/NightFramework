@@ -411,3 +411,37 @@ notifications and taskbar progress, networking, and iOS touch support. The
 Windows taskbar backend uses `ITaskbarList3` without exposing COM types in the
 Haxe API. Shared APIs should remain independent of Win32, Android, and UIKit,
 with platform-specific implementations kept in their respective packages.
+
+
+## New development branch: portability and Sparrow graphics
+
+The branch `feature/portable-platforms-sparrow-atlas` adds the first
+Sparrow atlas metadata and animation-clock APIs:
+
+- `lemon.graphics.atlas.TextureAtlas` parses Sparrow XML `TextureAtlas` /
+  `SubTexture` metadata, including trimmed-frame offsets.
+- `SparrowFrame` stores source rectangle and original frame dimensions.
+- `Animation` provides elapsed-time playback, looping, pause, stop, and
+  non-looping completion.
+
+Example:
+
+```haxe
+import lemon.graphics.atlas.TextureAtlas;
+import lemon.graphics.atlas.Animation;
+
+var atlas = TextureAtlas.load("assets/character.xml");
+var idle = [atlas.get("idle0000"), atlas.get("idle0001")];
+var animation = new Animation("idle", idle, 24, true);
+animation.play();
+animation.update(elapsedSeconds);
+var frame = animation.currentFrame;
+```
+
+This is the metadata and timing foundation, not yet full atlas rendering:
+the current renderer still needs source-rectangle texture drawing and a
+backend-neutral texture API before these frames can be drawn by Sprite.
+
+See [the portability design](docs/PORTABILITY_AND_GRAPHICS.md) and
+[the roadmap](docs/ROADMAP.md) for Vulkan, iOS, Linux, macOS, and compiler
+work. Those platform backends are planned, not claimed as implemented.
