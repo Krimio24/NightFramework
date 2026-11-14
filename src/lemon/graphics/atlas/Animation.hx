@@ -30,6 +30,17 @@ class Animation
         finished = false;
     }
 
+    public static function fromPrefix(atlas:TextureAtlas, prefix:String,
+        frameRate:Float = 24, loop:Bool = true):Animation
+    {
+        if (atlas == null)
+            throw "TextureAtlas cannot be null";
+        var selected = atlas.getPrefix(prefix);
+        if (selected.length == 0)
+            throw 'No Sparrow frames found for prefix "$prefix"';
+        return new Animation(prefix, selected, frameRate, loop);
+    }
+
     public function play(restart:Bool = false):Void
     {
         if (restart || finished)
