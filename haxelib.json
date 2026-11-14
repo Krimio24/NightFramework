@@ -1,7 +1,6 @@
-
 {
-  "name": "lemon",
-  "url": "https://github.com/Krimio24/lemon",
+  "name": "night",
+  "url": "https://github.com/Krimio24/NightFramework",
   "license": "MIT",
   "tags": [
     "game",
@@ -10,10 +9,10 @@
     "audio",
     "native"
   ],
-  "description": "A lightweight game framework built with Haxe and native platform APIs.",
+  "description": "Night is a lightweight Haxe framework for 2D applications and games.",
   "version": "0.1.0",
   "classPath": "src",
-  "releasenote": "Initial development release.",
+  "releasenote": "Night framework development release.",
   "contributors": [
     "LemonsFramework",
     "Krimio24"
