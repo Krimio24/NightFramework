@@ -3,9 +3,9 @@
 ## Graphics
 - [x] Parse Sparrow XML TextureAtlas metadata.
 - [x] Provide a frame-based animation clock with loop and non-loop playback.
-- [ ] Add backend-neutral source-rectangle drawing to GraphicsContext and Renderer.
-- [ ] Connect Animation frames to Sprite rendering.
-- [ ] Add atlas image decoding, texture lifetime management, and validation fixtures.
+- [x] Add Windows Direct2D source-rectangle drawing to Renderer.\n- [ ] Add backend-neutral source-rectangle drawing to GraphicsContext and other platform renderers.
+- [x] Connect Animation frames to Sprite rendering on Windows.\n- [ ] Connect Sprite animation rendering to Android and future backends.
+- [x] Load atlas images through the existing Graphics texture lifecycle on Windows.\n- [ ] Add cross-platform atlas image decoding and validation fixtures.
 - [ ] Add TexturePacker/Sparrow export compatibility tests.
 
 ## Platform backends
