@@ -58,12 +58,16 @@ compatibility alias until a migration release.
 
 ## Sparrow atlas support
 
-The `lemon.graphics.atlas` package now contains a Sparrow XML metadata reader
-and a time-based animation controller. The parser reads `TextureAtlas` and
-`SubTexture` elements, including trimmed-frame offsets. It intentionally keeps
-atlas metadata separate from rendering.
+The `lemon.graphics.atlas` package contains a Sparrow XML metadata reader,
+ordered prefix lookup, and a time-based animation controller. It reads
+`TextureAtlas` and `SubTexture` elements, including trimmed-frame offsets.
+`Animation.fromPrefix` builds an animation from a frame-name prefix.
 
-The current native renderer does not expose source-rectangle texture drawing,
-so this metadata layer does not yet crop and display individual atlas frames.
-The next renderer change must add a backend-neutral source rectangle operation
-before presenting Sparrow animation as end-to-end sprite playback.
+The Windows Direct2D backend now exposes source-rectangle texture drawing.
+`Sprite.playAnimation(atlas, animation)` loads the atlas image and connects
+the animation; call `Sprite.update(elapsedSeconds)` each frame. The Windows
+renderer draws only the selected atlas rectangle and applies Sparrow trim
+offsets. The Android prototype still has only its shape-oriented
+`GraphicsContext`; it does not yet render Sprite textures or Sparrow atlases.
+A backend-neutral texture API and source-rectangle operation remain required
+for Android, Linux, macOS, iOS, and Vulkan backends.
