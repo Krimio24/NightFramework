@@ -12,7 +12,8 @@
 - [ ] Add TexturePacker/Sparrow export compatibility tests.
 
 ## Module system
-- [ ] Define and implement the versioned C-compatible native module ABI.
+- [x] Define the initial versioned C-compatible native module ABI header.
+- [ ] Implement native module loading, lifecycle management, and ABI validation.
 - [ ] Build Lemon runtime libraries as `.ndll` and Windows-compatible `.dll`.
 - [ ] Build native app/game modules as `.ndll` or `.dll` according to target.
 - [ ] Define the `.hdll` Haxe module container, runtime versioning, and loader.
